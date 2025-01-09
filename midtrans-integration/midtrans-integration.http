@@ -1,0 +1,6 @@
+@midtrans_integration_HostAddress = http://localhost:5220
+
+GET {{midtrans_integration_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
