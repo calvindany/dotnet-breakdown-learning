@@ -51,5 +51,25 @@ namespace midtrans_integration.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTransactionStatus(String OrderID)
+        {
+            String path = $"/v2/{OrderID}/status";
+            String baseUrl = DotNetEnv.Env.GetString("MIDTRANS_URL");
+
+            HttpRequestHeader requestHeader = new HttpRequestHeader()
+            {
+                BaseUrl = baseUrl,
+                Route = path,
+                BearerToken = DotNetEnv.Env.GetString("MIDTRANS_AUTH_KEY"),
+                ServerKey = DotNetEnv.Env.GetString("MIDTRANS_SERVER_KEY"),
+                MimeType = "application/json"
+            };
+
+            MidtransTransactionStatusResponse result = await HttpHelper.GetRequest< MidtransTransactionStatusResponse>(requestHeader);
+
+            return Ok(result);
+        }
     }
 }

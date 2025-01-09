@@ -5,6 +5,24 @@ namespace midtrans_integration.Helper
 {
     public class HttpHelper
     {
+        public static async Task<T?> GetRequest<T>(HttpRequestHeader header)
+        {
+            var client = new HttpClient();
+
+            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(header.MimeType));
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", header.BearerToken);
+
+            var response = await client.GetAsync(header.BaseUrl + header.Route);
+
+            if(!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Error while requesting to Midtrans");
+            }
+
+            String responseBody = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<T>(responseBody);
+        }
         public static async Task<T?> PostRequest<T>(HttpRequestHeader header, object body)
         {
             var client = new HttpClient();
